@@ -9,14 +9,20 @@ from selenium.webdriver.chrome.options import Options
 
 # load enviornmental variables
 load_dotenv()
+
 url = os.getenv("TENNISHACK_URL")
 username_keys = os.getenv('TENNISHACK_USERNAME')
 password_keys = os.getenv('TENNISHACK_PASSWORD')
 booking_url = os.getenv('TENNISHACL_BOOKING_URL')
+binary_location = os.getenv('GOOGLE_CHROME_BIN')
 
 # make window max size
 chrome_options = Options()
 chrome_options.add_argument('--kiosk')
+chrome_options.binary_location = binary_location
+# chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
 
 # load initial login page
 driver = webdriver.Chrome(options=chrome_options)
