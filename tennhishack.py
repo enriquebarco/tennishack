@@ -9,23 +9,23 @@ from selenium.webdriver.chrome.options import Options
 
 # load enviornmental variables
 load_dotenv()
-
 url = os.getenv("TENNISHACK_URL")
 username_keys = os.getenv('TENNISHACK_USERNAME')
 password_keys = os.getenv('TENNISHACK_PASSWORD')
 booking_url = os.getenv('TENNISHACL_BOOKING_URL')
 binary_location = os.getenv('GOOGLE_CHROME_BIN')
+chrome_driver_path = os.getenv('CHROMEDRIVER_PATH')
 
 # make window max size
 chrome_options = Options()
 chrome_options.add_argument('--kiosk')
 chrome_options.binary_location = binary_location
-# chrome_options.add_argument('--headless')
+chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 
 # load initial login page
-driver = webdriver.Chrome(options=chrome_options)
+driver = webdriver.Chrome(executable_path=chrome_driver_path,  options=chrome_options)
 wait = WebDriverWait(driver, 20)
 driver.get(url)
 
@@ -38,6 +38,8 @@ username_el.send_keys(username_keys)
 password_el.send_keys(password_keys)
 login_button_el.click()
 
+print('logged in')
+
 # navigate to tennis bookings post authentication
 driver.get(booking_url)
 
@@ -47,12 +49,16 @@ wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/
 two_days_advance_div = wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div/div/div/div[4]')))
 driver.execute_script("arguments[0].click();", two_days_advance_div)
 
+print('navigated to correct date')
+
 # select court available at 7pm court 6
 wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div')))
 wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div/div[6]/div/div/div[2]')))
 wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div/div[6]/div/div/div[2]/div[18]')))
 court = driver.find_element(By.XPATH,'//html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div/div[6]/div/div/div[2]/div[18]/div[1]')
 driver.execute_script("arguments[0].click();", court)
+
+print('moved to booking date')
 
 # complete booking
 wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[3]/div[2]')))
