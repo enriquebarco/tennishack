@@ -26,6 +26,7 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 
 # load initial login page
 driver = webdriver.Chrome(executable_path=chrome_driver_path,  options=chrome_options)
+# driver = webdriver.Chrome(options=chrome_options)
 wait = WebDriverWait(driver, 20)
 driver.get(url)
 
@@ -55,7 +56,7 @@ print('navigated to correct date')
 wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div')))
 wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div/div[6]/div/div/div[2]')))
 wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div/div[6]/div/div/div[2]/div[18]')))
-court = driver.find_element(By.XPATH,'//html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div/div[6]/div/div/div[2]/div[18]/div[1]')
+court = driver.find_element(By.XPATH, "//*[text()='7:00 PM']")
 driver.execute_script("arguments[0].click();", court)
 
 print('moved to booking date')
