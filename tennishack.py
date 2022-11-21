@@ -52,7 +52,7 @@ driver.execute_script("arguments[0].click();", two_days_advance_div)
 
 print('navigated to correct date')
 
-# select court available at 7pm court 6
+# select court available at 7pm
 wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div')))
 wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div/div[6]/div/div/div[2]')))
 wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div/div[6]/div/div/div[2]/div[18]')))
