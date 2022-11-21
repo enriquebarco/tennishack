@@ -18,14 +18,14 @@ binary_location = os.getenv('GOOGLE_CHROME_BIN')
 # make window max size, chrome and chrome driver settings to run headless on heroku
 chrome_options = Options()
 chrome_options.add_argument('--kiosk')
-chrome_options.binary_location = binary_location
-chrome_options.add_argument('--headless')
+# chrome_options.binary_location = binary_location
+# chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 
 # load initial login page
 driver = webdriver.Chrome(options=chrome_options)
-wait = WebDriverWait(driver, 20)
+wait = WebDriverWait(driver, 30)
 driver.get(url)
 
 print('page loaded')
@@ -55,9 +55,7 @@ driver.execute_script("arguments[0].click();", two_days_advance_div)
 print('navigated to correct date')
 
 # select court available at 7pm
-wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div')))
-wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div/div[6]/div/div/div[2]')))
-wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div/div[6]/div/div/div[2]/div[18]')))
+wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div')))
 court = driver.find_element(By.XPATH, "//*[text()='7:00 PM']")
 driver.execute_script("arguments[0].click();", court)
 
