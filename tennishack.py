@@ -25,7 +25,7 @@ chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 
 # load initial login page
-driver = webdriver.Chrome(executable_path=chrome_driver_path,  options=chrome_options)
+driver = webdriver.Chrome(options=chrome_options)
 # driver = webdriver.Chrome(options=chrome_options)
 wait = WebDriverWait(driver, 20)
 driver.get(url)
