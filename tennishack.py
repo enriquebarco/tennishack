@@ -18,8 +18,8 @@ binary_location = os.getenv('GOOGLE_CHROME_BIN')
 # make window max size, chrome and chrome driver settings to run headless on heroku
 chrome_options = Options()
 chrome_options.add_argument('--kiosk')
-# chrome_options.binary_location = binary_location
-# chrome_options.add_argument('--headless')
+chrome_options.binary_location = binary_location
+chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 
