@@ -16,7 +16,7 @@ booking_url = os.getenv('TENNISHACK_BOOKING_URL')
 binary_location = os.getenv('GOOGLE_CHROME_BIN')
 chrome_driver_path = os.getenv('CHROMEDRIVER_PATH')
 
-# make window max size
+# make window max size, chrome and chrome driver settings to run headless on heroku
 chrome_options = Options()
 chrome_options.add_argument('--kiosk')
 chrome_options.binary_location = binary_location
@@ -29,6 +29,8 @@ driver = webdriver.Chrome(executable_path=chrome_driver_path,  options=chrome_op
 # driver = webdriver.Chrome(options=chrome_options)
 wait = WebDriverWait(driver, 20)
 driver.get(url)
+
+print('page loaded')
 
 # input login information
 username_el = driver.find_element(By.XPATH,'//*[@id="p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_UserName"]')
@@ -43,6 +45,8 @@ print('logged in')
 
 # navigate to tennis bookings post authentication
 driver.get(booking_url)
+
+print('succesfully navigated to booking page')
 
 # show courts available two days ahead
 wait.until(EC.frame_to_be_available_and_switch_to_it(driver.find_element(By.XPATH,'//*[@id="module"]')))
