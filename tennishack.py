@@ -14,7 +14,6 @@ username_keys = os.getenv('TENNISHACK_USERNAME')
 password_keys = os.getenv('TENNISHACK_PASSWORD')
 booking_url = os.getenv('TENNISHACK_BOOKING_URL')
 binary_location = os.getenv('GOOGLE_CHROME_BIN')
-chrome_driver_path = os.getenv('CHROMEDRIVER_PATH')
 
 # make window max size, chrome and chrome driver settings to run headless on heroku
 chrome_options = Options()
@@ -26,7 +25,6 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 
 # load initial login page
 driver = webdriver.Chrome(options=chrome_options)
-# driver = webdriver.Chrome(options=chrome_options)
 wait = WebDriverWait(driver, 20)
 driver.get(url)
 
