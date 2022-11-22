@@ -62,8 +62,8 @@ driver.execute_script("arguments[0].click();", court)
 print('moved to booking date')
 
 # complete booking
-wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[3]/div[2]')))
-book_button_el = driver.find_element(By.XPATH,'//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[3]/div[2]/div/div[2]/div/div/a')
+wait.until(EC.visibility_of_element_located((By.XPATH, "//*[text()='BOOK NOW']")))
+book_button_el = driver.find_element(By.XPATH,"//*[text()='BOOK NOW']")
 driver.execute_script("arguments[0].click();", book_button_el)
 
 # confirm booking
