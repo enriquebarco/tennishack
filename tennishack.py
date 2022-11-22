@@ -18,8 +18,8 @@ binary_location = os.getenv('GOOGLE_CHROME_BIN')
 # make window max size, chrome settings to run headless on heroku
 chrome_options = Options()
 chrome_options.add_argument('--kiosk')
-chrome_options.binary_location = binary_location
-chrome_options.add_argument('--headless')
+# chrome_options.binary_location = binary_location
+# chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 
@@ -62,8 +62,8 @@ driver.execute_script("arguments[0].click();", court)
 print('moved to booking date')
 
 # complete booking
-wait.until(EC.visibility_of_element_located((By.XPATH, "//*[text()='BOOK NOW']")))
-book_button_el = driver.find_element(By.XPATH,"//*[text()='BOOK NOW']")
+wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")))
+book_button_el = driver.find_element(By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")
 driver.execute_script("arguments[0].click();", book_button_el)
 
 # confirm booking
