@@ -56,7 +56,8 @@ print('navigated to correct date')
 
 # select court available at 7pm
 wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div')))
-court = driver.find_element(By.XPATH, "//*[text()='7:00 PM']")
+court_list = driver.find_elements(By.XPATH, "//*[text()='7:00 PM']")
+court = court_list[4]
 driver.execute_script("arguments[0].click();", court)
 
 print('moved to booking date')
