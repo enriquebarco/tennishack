@@ -19,10 +19,35 @@ binary_location = os.getenv('GOOGLE_CHROME_BIN')
 # make window max size, chrome settings to run headless on heroku
 chrome_options = Options()
 chrome_options.add_argument('--kiosk')
-# chrome_options.binary_location = binary_location
-# chrome_options.add_argument('--headless')
+chrome_options.binary_location = binary_location
+chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
+
+ # Get the current day of the week
+today = datetime.datetime.now().strftime("%A")
+
+# function to book a court dynamically depending on if it is thursday or friday
+def book_court(driver, wait, today):
+    if today == 'Thursday' or today == 'Friday':
+        time = '10:00 PM'
+        court_index = 2
+    else:
+        time = '7:00 PM'
+        court_index = -1
+    try:
+        wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div')))
+        court_list = driver.find_elements(By.XPATH, f"//*[text()='{time}']")
+        court = court_list[court_index]
+        if len(court_list) == 0:
+            print("No available courts at the desired time.")
+        else:
+            print(f'Today is {today} and will book a court accordingly')
+            driver.execute_script("arguments[0].click();", court)
+            print('moved to booking date')
+    except Exception as e:
+        print(f'Error moving to booking date: {e}')
+        driver.quit()
 
 # load initial login page
 try:
@@ -32,6 +57,7 @@ try:
     print('page loaded')
 except Exception as e:
     print(f'Error loading page: {e}')
+    driver.quit()
 
 # input login information
 try:
@@ -45,6 +71,7 @@ try:
     print('logged in')
 except Exception as e:
     print(f'Error logining into page: {e}')
+    driver.quit()
 
 # navigate to tennis bookings post authentication
 try:
@@ -62,24 +89,10 @@ try:
     print('navigated to correct date')
 except Exception as e:
     print(f'Error navigating to correct booking date: {e}')
+    driver.quit()
 
-try:
-    wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div')))
-    today = datetime.datetime.today().weekday()
-    if today == 3:
-        court_list = driver.find_elements(By.XPATH, "//*[text()='10:00 AM']")
-        court = court_list[2]
-    else:
-        court_list = driver.find_elements(By.XPATH, "//*[text()='7:00 PM']")
-        court = court_list[-1]
-    if len(court_list) == 0:
-        print("No available courts at the desired time.")
-    else:
-        print(f'Today is {today} and will book a court accordingly')
-        driver.execute_script("arguments[0].click();", court)
-        print('moved to booking date')
-except Exception as e:
-    print(f'Error moving to booking date: {e}')
+# book the court
+book_court(driver, wait, today)
 
 # complete booking
 try:
@@ -92,7 +105,9 @@ try:
 
     if confirmation:
         print('booked!')
+        driver.quit()
 
 except Exception as e:
     print(f'Error booking court: {e}')
+    driver.quit()
 
