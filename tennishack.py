@@ -30,9 +30,11 @@ today = datetime.datetime.now().strftime("%A")
 # function to book a court dynamically depending on if it is thursday or friday
 def book_court(driver, wait, today):
     if today == 'Thursday' or today == 'Friday':
+        # book court 3 at 10am
         time = '10:00 PM'
         court_index = 2
     else:
+        # book court 7 and 7pm
         time = '7:00 PM'
         court_index = -1
     try:
