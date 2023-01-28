@@ -1,4 +1,5 @@
 import os
+import datetime
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -18,60 +19,80 @@ binary_location = os.getenv('GOOGLE_CHROME_BIN')
 # make window max size, chrome settings to run headless on heroku
 chrome_options = Options()
 chrome_options.add_argument('--kiosk')
-chrome_options.binary_location = binary_location
-chrome_options.add_argument('--headless')
+# chrome_options.binary_location = binary_location
+# chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 
 # load initial login page
-driver = webdriver.Chrome(options=chrome_options)
-wait = WebDriverWait(driver, 30)
-driver.get(url)
-
-print('page loaded')
+try:
+    driver = webdriver.Chrome(options=chrome_options)
+    wait = WebDriverWait(driver, 30)
+    driver.get(url)
+    print('page loaded')
+except Exception as e:
+    print(f'Error loading page: {e}')
 
 # input login information
-username_el = driver.find_element(By.XPATH,'//*[@id="p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_UserName"]')
-password_el = driver.find_element(By.XPATH,'//*[@id="p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_Password"]')
-login_button_el = driver.find_element(By.XPATH,'//*[@id="p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_LoginButton"]')
+try:
+    username_el = driver.find_element(By.CSS_SELECTOR,'#p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_UserName')
+    password_el = driver.find_element(By.CSS_SELECTOR,'#p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_Password')
+    login_button_el = driver.find_element(By.CSS_SELECTOR,'#p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_LoginButton')
 
-username_el.send_keys(username_keys)
-password_el.send_keys(password_keys)
-login_button_el.click()
-
-print('logged in')
+    username_el.send_keys(username_keys)
+    password_el.send_keys(password_keys)
+    login_button_el.click()
+    print('logged in')
+except Exception as e:
+    print(f'Error logining into page: {e}')
 
 # navigate to tennis bookings post authentication
-driver.get(booking_url)
-
-print('succesfully navigated to booking page')
+try:
+    driver.get(booking_url)
+    print('succesfully navigated to booking page')
+except Exception as e:
+    print(f'Error moving to booking url: {e}')
 
 # show courts available two days ahead
-wait.until(EC.frame_to_be_available_and_switch_to_it(driver.find_element(By.XPATH,'//*[@id="module"]')))
-wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div')))
-two_days_advance_div = wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div/div/div/div[4]')))
-driver.execute_script("arguments[0].click();", two_days_advance_div)
+try:
+    wait.until(EC.frame_to_be_available_and_switch_to_it(driver.find_element(By.XPATH,'//*[@id="module"]')))
+    wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div')))
+    two_days_advance_div = wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div/div/div/div[4]')))
+    driver.execute_script("arguments[0].click();", two_days_advance_div)
+    print('navigated to correct date')
+except Exception as e:
+    print(f'Error navigating to correct booking date: {e}')
 
-print('navigated to correct date')
-
-# select court available at 7pm
-wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div')))
-court_list = driver.find_elements(By.XPATH, "//*[text()='7:00 PM']")
-court = court_list[4]
-driver.execute_script("arguments[0].click();", court)
-
-print('moved to booking date')
+try:
+    wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div')))
+    today = datetime.datetime.today().weekday()
+    if today == 3:
+        court_list = driver.find_elements(By.XPATH, "//*[text()='10:00 AM']")
+        court = court_list[2]
+    else:
+        court_list = driver.find_elements(By.XPATH, "//*[text()='7:00 PM']")
+        court = court_list[-1]
+    if len(court_list) == 0:
+        print("No available courts at the desired time.")
+    else:
+        print(f'Today is {today} and will book a court accordingly')
+        driver.execute_script("arguments[0].click();", court)
+        print('moved to booking date')
+except Exception as e:
+    print(f'Error moving to booking date: {e}')
 
 # complete booking
-wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")))
-book_button_el = driver.find_element(By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")
-driver.execute_script("arguments[0].click();", book_button_el)
+try:
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")))
+    book_button_el = driver.find_element(By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")
+    driver.execute_script("arguments[0].click();", book_button_el)
 
-# confirm booking
-confirmation = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[1]/h1')))
+    # confirm booking
+    confirmation = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[1]/h1')))
 
-if confirmation:
-    print('booked!')
+    if confirmation:
+        print('booked!')
 
-
+except Exception as e:
+    print(f'Error booking court: {e}')
 
