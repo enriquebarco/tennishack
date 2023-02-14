@@ -34,9 +34,9 @@ def book_court(driver, wait, today):
         time = '10:00 PM'
         court_index = 2
     else:
-        # book court 7 and 7pm
+        # book court 6 and 7pm
         time = '7:00 PM'
-        court_index = -1
+        court_index = -2
     try:
         wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div')))
         court_list = driver.find_elements(By.XPATH, f"//*[text()='{time}']")
