@@ -34,7 +34,7 @@ def book_court(driver, wait, today):
     if today == 'Thursday' or today == 'Friday':
         # book court 3 at 10am
         time = '10:00 PM'
-        court_index = 2
+        court_index = 0
     else:
         # book court 6 and 7pm
         time = '7:00 PM'
@@ -52,7 +52,7 @@ def book_court(driver, wait, today):
     except Exception as e:
         print(f'Error moving to booking date: {e}')
         base64_image = driver.get_screenshot_as_base64()
-        with open(f"screenshot_error_{attempt}.txt", "w") as file:
+        with open(f"screenshot_error_.txt", "w") as file:
             file.write(base64_image)
         driver.quit()
 
