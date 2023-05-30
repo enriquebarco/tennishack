@@ -1,5 +1,7 @@
 import os
 import datetime
+import time
+import base64
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -49,67 +51,92 @@ def book_court(driver, wait, today):
             print('moved to booking date')
     except Exception as e:
         print(f'Error moving to booking date: {e}')
+        base64_image = driver.get_screenshot_as_base64()
+        with open(f"screenshot_error_{attempt}.txt", "w") as file:
+            file.write(base64_image)
         driver.quit()
 
-# load initial login page
-try:
-    driver = webdriver.Chrome(options=chrome_options)
-    wait = WebDriverWait(driver, 30)
-    driver.get(url)
-    print('page loaded')
-except Exception as e:
-    print(f'Error loading page: {e}')
-    driver.quit()
+def main ():
+    MAX_RETRIES = 3
+    for attempt in range(MAX_RETRIES):
+        # load initial login page
+        try:
+            driver = webdriver.Chrome(options=chrome_options)
+            wait = WebDriverWait(driver, 30)
+            driver.get(url)
+            print('page loaded')
+        except Exception as e:
+            print(f'Error loading page: {e}')
+            driver.quit()
 
-# input login information
-try:
-    username_el = driver.find_element(By.CSS_SELECTOR,'#p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_UserName')
-    password_el = driver.find_element(By.CSS_SELECTOR,'#p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_Password')
-    login_button_el = driver.find_element(By.CSS_SELECTOR,'#p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_LoginButton')
+        # input login information
+        try:
+            username_el = driver.find_element(By.CSS_SELECTOR,'#p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_UserName')
+            password_el = driver.find_element(By.CSS_SELECTOR,'#p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_Password')
+            login_button_el = driver.find_element(By.CSS_SELECTOR,'#p_lt_ContentWidgets_pageplaceholder_p_lt_zoneContent_CHO_Widget_LoginFormWithFullscreenBackground_XLarge_loginCtrl_BaseLogin_LoginButton')
 
-    username_el.send_keys(username_keys)
-    password_el.send_keys(password_keys)
-    login_button_el.click()
-    print('logged in')
-except Exception as e:
-    print(f'Error logining into page: {e}')
-    driver.quit()
+            username_el.send_keys(username_keys)
+            password_el.send_keys(password_keys)
+            login_button_el.click()
+            print('logged in')
+        except Exception as e:
+            print(f'Error logining into page: {e}')
+            base64_image = driver.get_screenshot_as_base64()
+            with open(f"screenshot_error_{attempt}.txt", "w") as file:
+                file.write(base64_image)
+            driver.quit()
+            continue
 
-# navigate to tennis bookings post authentication
-try:
-    driver.get(booking_url)
-    print('succesfully navigated to booking page')
-except Exception as e:
-    print(f'Error moving to booking url: {e}')
+        # navigate to tennis bookings post authentication
+        try:
+            driver.get(booking_url)
+            print('succesfully navigated to booking page')
+        except Exception as e:
+            print(f'Error moving to booking url: {e}')
+            base64_image = driver.get_screenshot_as_base64()
+            with open(f"screenshot_error_{attempt}.txt", "w") as file:
+                file.write(base64_image)
+            driver.quit()
+            continue
 
-# show courts available two days ahead
-try:
-    wait.until(EC.frame_to_be_available_and_switch_to_it(driver.find_element(By.XPATH,'//*[@id="module"]')))
-    wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div')))
-    two_days_advance_div = wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div/div/div/div[4]')))
-    driver.execute_script("arguments[0].click();", two_days_advance_div)
-    print('navigated to correct date')
-except Exception as e:
-    print(f'Error navigating to correct booking date: {e}')
-    driver.quit()
+        # show courts available two days ahead
+        try:
+            wait.until(EC.frame_to_be_available_and_switch_to_it(driver.find_element(By.XPATH,'//*[@id="module"]')))
+            wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div')))
+            two_days_advance_div = wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div/div/div/div[4]')))
+            driver.execute_script("arguments[0].click();", two_days_advance_div)
+            print('navigated to correct date')
+        except Exception as e:
+            print(f'Error navigating to correct booking date: {e}')
+            base64_image = driver.get_screenshot_as_base64()
+            with open(f"screenshot_error_{attempt}.txt", "w") as file:
+                file.write(base64_image)
+            driver.quit()
+            continue
 
-# book the court
-book_court(driver, wait, today)
+        # book the court
+        book_court(driver, wait, today)
 
-# complete booking
-try:
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")))
-    book_button_el = driver.find_element(By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")
-    driver.execute_script("arguments[0].click();", book_button_el)
+        # complete booking
+        try:
+            wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")))
+            book_button_el = driver.find_element(By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")
+            driver.execute_script("arguments[0].click();", book_button_el)
 
-    # confirm booking
-    confirmation = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[1]/h1')))
+            # confirm booking
+            confirmation = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[1]/h1')))
 
-    if confirmation:
-        print('booked!')
-        driver.quit()
+            if confirmation:
+                print('booked!')
+                driver.quit()
+                break 
 
-except Exception as e:
-    print(f'Error booking court: {e}')
-    driver.quit()
+        except Exception as e:
+            print(f'Error running script: {e}. Attempt {attempt+1} of {MAX_RETRIES} failed.')
+            if attempt < MAX_RETRIES - 1:  # If there are more retries left
+                time.sleep(10)  # Wait for 10 seconds before retrying
+            else:  # If this was the last attempt
+                print('Script failed after maximum retries.')
 
+if __name__ == "__main__":
+    main()
