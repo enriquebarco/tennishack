@@ -29,6 +29,12 @@ chrome_options.add_argument('--disable-dev-shm-usage')
  # Get the current day of the week
 today = datetime.datetime.now().strftime("%A")
 
+
+def handle_screenshot(driver):
+    base64_image = driver.get_screenshot_as_base64()
+    print(base64_image)
+    driver.quit()
+
 # function to book a court dynamically depending on if it is thursday or friday
 def book_court(driver, wait, today):
     if today == 'Thursday' or today == 'Friday':
@@ -51,10 +57,8 @@ def book_court(driver, wait, today):
             print('moved to booking date')
     except Exception as e:
         print(f'Error moving to booking date: {e}')
-        base64_image = driver.get_screenshot_as_base64()
-        with open(f"screenshot_error_.txt", "w") as file:
-            file.write(base64_image)
-        driver.quit()
+        handle_screenshot(driver)
+
 
 def main ():
     MAX_RETRIES = 3
@@ -81,10 +85,7 @@ def main ():
             print('logged in')
         except Exception as e:
             print(f'Error logining into page: {e}')
-            base64_image = driver.get_screenshot_as_base64()
-            with open(f"screenshot_error_{attempt}.txt", "w") as file:
-                file.write(base64_image)
-            driver.quit()
+            handle_screenshot(driver)
             continue
 
         # navigate to tennis bookings post authentication
@@ -93,10 +94,7 @@ def main ():
             print('succesfully navigated to booking page')
         except Exception as e:
             print(f'Error moving to booking url: {e}')
-            base64_image = driver.get_screenshot_as_base64()
-            with open(f"screenshot_error_{attempt}.txt", "w") as file:
-                file.write(base64_image)
-            driver.quit()
+            handle_screenshot(driver)
             continue
 
         # show courts available two days ahead
@@ -108,10 +106,7 @@ def main ():
             print('navigated to correct date')
         except Exception as e:
             print(f'Error navigating to correct booking date: {e}')
-            base64_image = driver.get_screenshot_as_base64()
-            with open(f"screenshot_error_{attempt}.txt", "w") as file:
-                file.write(base64_image)
-            driver.quit()
+            handle_screenshot(driver)
             continue
 
         # book the court
