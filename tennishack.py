@@ -21,8 +21,8 @@ binary_location = os.getenv('GOOGLE_CHROME_BIN')
 # make window max size, chrome settings to run headless on heroku. To run localy, comment out chrome_options.binary_location and chrome_options.add_argument('--headless')
 chrome_options = Options()
 chrome_options.add_argument('--kiosk')
-# chrome_options.binary_location = binary_location
-# chrome_options.add_argument('--headless')
+chrome_options.binary_location = binary_location
+chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 
