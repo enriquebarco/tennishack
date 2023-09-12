@@ -114,8 +114,10 @@ def main ():
 
         # complete booking
         try:
-            wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")))
-            book_button_el = driver.find_element(By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")
+            wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div[2]/a")))
+            print('page loaded')
+            book_button_el = driver.find_element(By.XPATH, "/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div[2]/a")
+            print('found book button')
             driver.execute_script("arguments[0].click();", book_button_el)
 
             # confirm booking
