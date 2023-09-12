@@ -46,13 +46,14 @@ def book_court(driver, wait, today):
         time = '7:00 PM'
         court_index = -2
     try:
-        wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div')))
+        wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div'))) 
         court_list = driver.find_elements(By.XPATH, f"//*[text()='{time}']")
         court = court_list[court_index]
         if len(court_list) == 0:
             print("No available courts at the desired time.")
         else:
             print(f'Today is {today} and will book a court accordingly')
+            print(f'found court {court} and will book a court accordingly')
             driver.execute_script("arguments[0].click();", court)
             print('moved to booking date')
     except Exception as e:
@@ -114,6 +115,7 @@ def main ():
 
         # complete booking
         try:
+            print('navigating to booking page')
             wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div[2]/a")))
             print('page loaded')
             book_button_el = driver.find_element(By.XPATH, "/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div[2]/a")
