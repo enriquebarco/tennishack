@@ -18,11 +18,11 @@ password_keys = os.getenv('TENNISHACK_PASSWORD')
 booking_url = os.getenv('TENNISHACK_BOOKING_URL')
 binary_location = os.getenv('GOOGLE_CHROME_BIN')
 
-# make window max size, chrome settings to run headless on heroku
+# make window max size, chrome settings to run headless on heroku. To run localy, comment out chrome_options.binary_location and chrome_options.add_argument('--headless')
 chrome_options = Options()
 chrome_options.add_argument('--kiosk')
-chrome_options.binary_location = binary_location
-chrome_options.add_argument('--headless')
+# chrome_options.binary_location = binary_location
+# chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 
@@ -39,24 +39,33 @@ def handle_screenshot(driver):
 def book_court(driver, wait, today):
     if today == 'Thursday' or today == 'Friday':
         # book court 3 at 10am
-        time = '10:00 PM'
-        court_index = 0
+        time = '10:00 AM'
+        court_name = "Court 3"
     else:
         # book court 6 and 7pm
         time = '7:00 PM'
-        court_index = -2
+        court_name = "Court 7"  # Change this to Court 6, 5, 4 etc. in the future if needed
+        
     try:
+        # Wait for the overall container or some known element to ensure the page has loaded
         wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div'))) 
-        court_list = driver.find_elements(By.XPATH, f"//*[text()='{time}']")
-        print(f'Found {court_list} courts at {time}')
-        court = court_list[court_index]
+
+        # Construct XPath to locate the desired court at the desired time
+        xpath_expression = f"//div[@class='court-col ng-scope'][.//div[@class='court-name ng-binding' and contains(text(), '{court_name}')]]//*[text()='{time}']"
+        court_list = driver.find_elements(By.XPATH, xpath_expression)
+        
+        print(f'Found {len(court_list)} slots at {time} for {court_name}')
+        
         if len(court_list) == 0:
-            print("No available courts at the desired time.")
+            print(f"No available slots at {time} for {court_name}.")
         else:
-            print(f'Today is {today} and will book a court accordingly')
-            print(f'Found court {court} at {time} and will book a court accordingly')
-            driver.execute_script("arguments[0].click();", court)
-            print('moved to booking date')
+            # Select the first available slot (can be changed based on requirements)
+            court_slot = court_list[0]
+            
+            print(f'Today is {today}. Booking {court_name} at {time}.')
+            driver.execute_script("arguments[0].click();", court_slot)
+            print('Moved to booking date.')
+            
     except Exception as e:
         print(f'Error moving to booking date: {e}')
         handle_screenshot(driver)
@@ -117,9 +126,9 @@ def main ():
         # complete booking
         try:
             print('navigating to booking page')
-            wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div[2]/a")))
+            wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")))
             print('page loaded')
-            book_button_el = driver.find_element(By.XPATH, "/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div[2]/a")
+            book_button_el = driver.find_element(By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")
             print('found book button')
             driver.execute_script("arguments[0].click();", book_button_el)
 
