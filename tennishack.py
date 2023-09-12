@@ -48,6 +48,7 @@ def book_court(driver, wait, today):
     try:
         wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div'))) 
         court_list = driver.find_elements(By.XPATH, f"//*[text()='{time}']")
+        print(f'Found {court_list} courts at {time}')
         court = court_list[court_index]
         if len(court_list) == 0:
             print("No available courts at the desired time.")
