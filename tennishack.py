@@ -53,7 +53,7 @@ def book_court(driver, wait, today):
             print("No available courts at the desired time.")
         else:
             print(f'Today is {today} and will book a court accordingly')
-            print(f'found court {court} and will book a court accordingly')
+            print(f'Found court {court} at {time} and will book a court accordingly')
             driver.execute_script("arguments[0].click();", court)
             print('moved to booking date')
     except Exception as e:
