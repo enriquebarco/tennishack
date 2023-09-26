@@ -40,7 +40,7 @@ def book_court(driver, wait, today):
     if today == 'Thursday' or today == 'Friday':
         # book court 3 at 10am
         time = '10:00 AM'
-        court_name = "Court 3"
+        court_name = "Court 4"
     else:
         # book court 6 and 7pm
         time = '7:00 PM'
