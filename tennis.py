@@ -40,6 +40,13 @@ class TennisCourtBooking:
         try:
             self.driver.get(self.booking_url)
             print('Successfully navigated to booking page')
+
+            self.wait.until(EC.frame_to_be_available_and_switch_to_it(self.driver.find_element(By.XPATH, '//*[@id="module"]')))
+            self.wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[5]/div[1]/div/div/div')))
+            two_days_advance_div = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[2]/div/div/div/div[4]')))
+            self.driver.execute_script("arguments[0].click();", two_days_advance_div)
+            print('Navigated to correct date')
+
         except Exception as e:
             print(f'Error moving to booking URL: {e}')
             handle_screenshot(self.driver)
@@ -87,9 +94,18 @@ class TennisCourtBooking:
         print('Moved to booking date.')
 
     def complete_booking(self):
-        print('booked!')
-        # Add the logic to complete the booking process
-        pass
+        print('navigating to booking page')
+        self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")))
+        print('page loaded')
+        book_button_el = self.driver.find_element(By.CSS_SELECTOR, "#form1 > div.inner-wrap > div.container.c-module > div > div > div > div.main-content.ng-scope > div > div.content.row > div.col-xs-12.col-sm-7.section-2 > div > div.row > div > div > a")
+        print('found book button')
+        self.driver.execute_script("arguments[0].click();", book_button_el)
+
+        # confirm booking
+        confirmation = self.wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="form1"]/div[3]/div[1]/div/div/div/div[3]/div/div[1]/h1')))
+        if confirmation:
+            print('booked!')
+            self.driver.quit()
 
     def run(self):
         self.login()
