@@ -19,7 +19,13 @@ chrome_options.binary_location = binary_location
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
+
+# act like a user
 chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3')
+chrome_options.add_argument('--accept=text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
+chrome_options.add_argument('--accept-language=en-US,en;q=0.5')
+chrome_options.add_argument('--referer=https://www.google.com/')
+
 
 
  # Get the current day of the week
@@ -42,10 +48,10 @@ def main ():
         wait_until_8am_est()
         paddle.run()
     else:
-        # paddle = PaddleCourtBooking(driver, wait)
-        # paddle.login()
-        # wait_until_8am_est()
-        # paddle.run()
+        paddle = PaddleCourtBooking(driver, wait)
+        paddle.login()
+        wait_until_8am_est()
+        paddle.run()
         tennis = TennisCourtBooking(driver, wait)
         tennis.login()
         wait_until_8am_est()
