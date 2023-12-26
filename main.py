@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from tennis import TennisCourtBooking
+from paddle import PaddleCourtBooking
 
 # load enviornmental variables
 load_dotenv()
@@ -33,10 +34,11 @@ def main ():
     driver, wait = initialize_driver()
 
     if today == 'Monday':
+        paddle = PaddleCourtBooking(driver, wait)
+        paddle.run()
+    else:
         tennis = TennisCourtBooking(driver, wait)
         tennis.run()
-    else:
-        print('Not Monday, not running script')
 
 
 if __name__ == "__main__":
