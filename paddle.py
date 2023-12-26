@@ -89,7 +89,6 @@ class PaddleCourtBooking:
 
 
     def run(self):
-        self.login()
         self.navigate_to_booking_page()
         self.book_paddle_court()
         self.confirm_booking()

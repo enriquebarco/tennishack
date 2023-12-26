@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from tennis import TennisCourtBooking
 from paddle import PaddleCourtBooking
+from utils import wait_until_8am_est
 
 # load enviornmental variables
 load_dotenv()
@@ -35,6 +36,8 @@ def main ():
 
     if today == 'Monday':
         paddle = PaddleCourtBooking(driver, wait)
+        paddle.login()
+        wait_until_8am_est()
         paddle.run()
     else:
         tennis = TennisCourtBooking(driver, wait)
