@@ -41,6 +41,8 @@ def main ():
         paddle.run()
     else:
         tennis = TennisCourtBooking(driver, wait)
+        tennis.login()
+        wait_until_8am_est()
         tennis.run()
 
 

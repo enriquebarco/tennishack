@@ -106,7 +106,6 @@ class TennisCourtBooking:
             self.driver.quit()
 
     def run(self):
-        self.login()
         self.navigate_to_booking_page()
         self.book_tennis_court()
         self.complete_booking()
