@@ -2,6 +2,7 @@ import os
 import datetime
 from dotenv import load_dotenv
 from selenium import webdriver
+from selenium_stealth import stealth
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from tennis import TennisCourtBooking
@@ -35,6 +36,17 @@ def initialize_driver():
     chrome_options = Options()
     # Configure Chrome Options as needed
     driver = webdriver.Chrome(options=chrome_options)
+
+    # Apply stealth settings to the driver
+    stealth(driver,
+            languages=["en-US", "en"],
+            vendor="Google Inc.",
+            platform="Win32",
+            webgl_vendor="Intel Inc.",
+            renderer="Intel Iris OpenGL Engine",
+            fix_hairline=True,
+            )
+    
     wait = WebDriverWait(driver, 30)
     return driver, wait
 
