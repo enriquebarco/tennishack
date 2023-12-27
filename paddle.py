@@ -10,6 +10,7 @@ load_dotenv()
 
 class PaddleCourtBooking:
     def __init__(self, driver, wait):
+        self.retries = 0
         self.driver = driver
         self.wait = wait
         self.today = datetime.datetime.now().strftime("%A")
@@ -88,7 +89,21 @@ class PaddleCourtBooking:
                 self.driver.quit()
 
 
-    def run(self):
-        self.navigate_to_booking_page()
-        self.book_paddle_court()
-        self.confirm_booking()
+def run(self):
+        while self.retries < 3:
+            try:
+                self.navigate_to_booking_page()
+                self.book_paddle_court()
+                self.confirm_booking()
+                break  # Exit loop if all steps are successful
+            except Exception as e:
+                print(f'Error encountered: {e}. Retrying...')
+                self.retries += 1  # Increment retry count
+                if self.retries >= 3:
+                    print("Maximum retries reached. Exiting.")
+                    break
+
+        if self.retries < 3:
+            print("Booking process completed successfully.")
+        else:
+            print("Booking process failed after maximum retries.")
