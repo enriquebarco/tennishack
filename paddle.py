@@ -103,17 +103,17 @@ class PaddleCourtBooking:
                     self.navigate_to_booking_page()
                     self.book_paddle_court()
                     self.confirm_booking()
-                    self.driver.quit()
                     break  # Exit loop if all steps are successful
                 except Exception as e:
                     print(f'Error encountered: {e}. Retrying...')
                     self.retries += 1  # Increment retry count
                     if self.retries >= 3:
                         print("Maximum retries reached. Exiting.")
-                        self.driver.quit()
                         break
 
             if self.retries < 3:
                 print("Booking process completed successfully.")
             else:
                 print("Booking process failed after maximum retries.")
+            
+            self.driver.quit()
