@@ -22,7 +22,7 @@ def wait_until_8am_est():
     now_est = now_utc.astimezone(eastern)
 
     # Set target time as 9:10 PM Eastern Time today
-    target_time_est_today = now_est.replace(hour=8, minute=0, second=0, microsecond=20)
+    target_time_est_today = now_est.replace(hour=8, minute=0, second=0, microsecond=30)
 
     # If current Eastern Time is past the target, log and return
     if now_est > target_time_est_today:
@@ -35,7 +35,7 @@ def wait_until_8am_est():
     print(f"Target time in EST/EDT: {target_time_est_today}")
 
     # Calculate sleep time
-    time_to_sleep = (target_time_utc - now_utc).total_seconds() - 10  # Wake up 10 seconds before the target time
+    time_to_sleep = (target_time_utc - now_utc).total_seconds() - 5  # Wake up 10 seconds before the target time
     print(f"Sleeping for {max(time_to_sleep, 0)} seconds...")
     time.sleep(max(time_to_sleep, 0))
 
