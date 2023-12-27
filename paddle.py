@@ -23,7 +23,7 @@ class PaddleCourtBooking:
     def login(self):
         try:
             self.driver.get(self.url)
-            print('Occa page loaded')
+            print('Paddle page loaded')
             username_el = self.driver.find_element(By.CSS_SELECTOR,'#user_email')
             password_el = self.driver.find_element(By.CSS_SELECTOR,'#user_password')
             login_button_el = self.driver.find_element(By.CSS_SELECTOR,'#new_user > div > div > div.form-actions > input')
@@ -76,21 +76,25 @@ class PaddleCourtBooking:
             handle_screenshot(self.driver)
 
     def confirm_booking(self):
-            # click next
-            next_button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "body > div.body_wrapper > div.pusher > div.yield_container.pb30 > div > div:nth-child(2) > div > div.ui.attached.segment > div > div:nth-child(2) > div.content.active > table > tbody > tr > td:nth-child(2) > div.position_sticky_bottom_on_mobile.bk_white.mtb20.ptb10.z-index-1 > div > button")))
-            self.driver.execute_script("arguments[0].click();", next_button)
-            print('clicked next, moving to final booking page')
+            try:
+                # click next
+                next_button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "body > div.body_wrapper > div.pusher > div.yield_container.pb30 > div > div:nth-child(2) > div > div.ui.attached.segment > div > div:nth-child(2) > div.content.active > table > tbody > tr > td:nth-child(2) > div.position_sticky_bottom_on_mobile.bk_white.mtb20.ptb10.z-index-1 > div > button")))
+                self.driver.execute_script("arguments[0].click();", next_button)
+                print('clicked next, moving to final booking page')
 
-            # click book
-            book_button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "body > div.body_wrapper > div.pusher > div.yield_container.pb30 > div > div:nth-child(2) > div > div.ui.attached.segment > div > div:nth-child(3) > div.content.active > table > tbody > tr > td:nth-child(2) > div:nth-child(1) > div.no-border-top > div > div > div > button")))
-            self.driver.execute_script("arguments[0].click();", book_button)
-            print('clicked book button')
+                # click book
+                book_button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "body > div.body_wrapper > div.pusher > div.yield_container.pb30 > div > div:nth-child(2) > div > div.ui.attached.segment > div > div:nth-child(3) > div.content.active > table > tbody > tr > td:nth-child(2) > div:nth-child(1) > div.no-border-top > div > div > div > button")))
+                self.driver.execute_script("arguments[0].click();", book_button)
+                print('clicked book button')
 
-            confirmation = self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'body > div.body_wrapper > div.pusher > div.yield_container.pb30 > div > div > div.ten.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column.plr0_on_mobile > div.ui.segments.fluid.no_shadow_on_mobile > div:nth-child(1) > div.mtb10 > div > div:nth-child(2) > div > div.text.semi.black.bold')))
+                confirmation = self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'body > div.body_wrapper > div.pusher > div.yield_container.pb30 > div > div > div.ten.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column.plr0_on_mobile > div.ui.segments.fluid.no_shadow_on_mobile > div:nth-child(1) > div.mtb10 > div > div:nth-child(2) > div > div.text.semi.black.bold')))
 
-            if confirmation:
-                print('booked!')
-                self.driver.quit()
+                if confirmation:
+                    print('booked!')
+                
+            except Exception as e:
+                print(f'Error confirming booking: {e}')
+                handle_screenshot(self.driver)
 
 
     def run(self):
@@ -99,12 +103,14 @@ class PaddleCourtBooking:
                     self.navigate_to_booking_page()
                     self.book_paddle_court()
                     self.confirm_booking()
+                    self.driver.quit()
                     break  # Exit loop if all steps are successful
                 except Exception as e:
                     print(f'Error encountered: {e}. Retrying...')
                     self.retries += 1  # Increment retry count
                     if self.retries >= 3:
                         print("Maximum retries reached. Exiting.")
+                        self.driver.quit()
                         break
 
             if self.retries < 3:
