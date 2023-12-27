@@ -1,1 +1,1 @@
-web: python tennishack.py
+web: python main.py
