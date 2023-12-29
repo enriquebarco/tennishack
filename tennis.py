@@ -71,7 +71,7 @@ class TennisCourtBooking:
         if self.today in ['Thursday', 'Friday']:
             return "Court 4", "10:00 AM"
         else:
-            return "Court 7", "7:00 PM"
+            return "Court 1", "7:00 PM"
 
     def book_any_available_court(self):
         any_court_xpath = "//div[@class='court-col ng-scope']//*[text()='7 PM']"

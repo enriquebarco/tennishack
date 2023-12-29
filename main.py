@@ -60,10 +60,6 @@ def main ():
         wait_until_8am_est()
         paddle.run()
     else:
-        paddle = PaddleCourtBooking(driver, wait)
-        paddle.login()
-        wait_until_8am_est()
-        paddle.run()
         tennis = TennisCourtBooking(driver, wait)
         tennis.login()
         wait_until_8am_est()
