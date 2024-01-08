@@ -1,4 +1,5 @@
 import os
+import sys
 import datetime
 from dotenv import load_dotenv
 from selenium import webdriver
@@ -52,6 +53,9 @@ def initialize_driver():
 
 
 def main ():
+    if today == 'Tuseday':
+        sys.exit('No bookings on Tuesdays')
+        
     driver, wait = initialize_driver()
 
     if today == 'Monday':
