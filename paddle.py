@@ -51,6 +51,8 @@ class PaddleCourtBooking:
     
     def book_paddle_court(self):
         try:
+            tennis = self.wait.until(EC.element_to_be_clickable((By.XPATH, f"//button[contains(text(), 'TENNIS')]")))
+            self.driver.execute_script("arguments[0].click();", tennis)
             time_slots = ['7-7:30pm', '7:30-8pm', '8-8:30pm']
             for slot in time_slots:
                 retry = 0
