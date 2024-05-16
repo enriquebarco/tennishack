@@ -51,8 +51,12 @@ class PaddleCourtBooking:
     
     def book_paddle_court(self):
         try:
-            tennis = self.wait.until(EC.element_to_be_clickable((By.XPATH, f"//button[contains(text(), 'Tennis')]")))
-            self.driver.execute_script("arguments[0].click();", tennis)
+            today = datetime.datetime.now().strftime("%A")
+            if today == 'Monday':
+                tennis = self.wait.until(EC.element_to_be_clickable((By.XPATH, f"//button[contains(text(), 'Tennis')]")))
+                self.driver.execute_script("arguments[0].click();", tennis)
+                print('Selected Tennis')
+            print('Selected Padle')
             time_slots = ['7-7:30pm', '7:30-8pm', '8-8:30pm']
             for slot in time_slots:
                 retry = 0
@@ -67,6 +71,10 @@ class PaddleCourtBooking:
                         if retry >= 3:
                             print(f"Failed to select time slot {slot} after retries.")
                             raise
+            if today == 'Monday':
+                court_3 = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Padel 3')]")))
+                self.driver.execute_script("arguments[0].click();", court_3)
+                print('selected court 3')
 
             # click next
             next_button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "body > div.body_wrapper > div.pusher > div.yield_container.pb30 > div > div:nth-child(2) > div > div.ui.attached.segment > div > div:nth-child(1) > div.content.active > table > tbody > tr > td:nth-child(2) > div.position_sticky_bottom_on_mobile.bk_white.mtb20.ptb10.z-index-1 > div.ui.buttons.fluid > button")))
