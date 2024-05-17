@@ -22,7 +22,7 @@ def wait_until_8am_est():
     now_est = now_utc.astimezone(eastern)
 
     # Set target time as 9:10 PM Eastern Time today
-    target_time_est_today = now_est.replace(hour=8, minute=0, second=0, microsecond=500000)
+    target_time_est_today = now_est.replace(hour=8, minute=0, second=1, microsecond=0)
 
     # If current Eastern Time is past the target, log and return
     if now_est > target_time_est_today:
