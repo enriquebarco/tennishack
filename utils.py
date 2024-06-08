@@ -8,7 +8,7 @@ def handle_screenshot(driver):
 
 import datetime
 import time
-import pytz  # You need to install this package for timezone handling
+import pytz
 
 def wait_until_8am_est():
     # Timezone for Eastern Time
@@ -22,7 +22,7 @@ def wait_until_8am_est():
     now_est = now_utc.astimezone(eastern)
 
     # Set target time as 9:10 PM Eastern Time today
-    target_time_est_today = now_est.replace(hour=8, minute=0, second=1, microsecond=0)
+    target_time_est_today = now_est.replace(hour=8, minute=0, second=0, microsecond=5000)
 
     # If current Eastern Time is past the target, log and return
     if now_est > target_time_est_today:

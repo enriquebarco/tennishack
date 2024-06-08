@@ -55,16 +55,10 @@ def initialize_driver():
 def main ():
     driver, wait = initialize_driver()
 
-    # if today == 'Monday':
     paddle = PaddleCourtBooking(driver, wait)
     paddle.login()
     wait_until_8am_est()
     paddle.run()
-    # else:
-    #     tennis = TennisCourtBooking(driver, wait)
-    #     tennis.login()
-    #     wait_until_8am_est()
-    #     tennis.run()
 
 
 if __name__ == "__main__":
