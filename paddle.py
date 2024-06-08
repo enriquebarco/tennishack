@@ -57,7 +57,7 @@ class PaddleCourtBooking:
             self.driver.execute_script("arguments[0].click();", tennis)
             print('Selected Tennis')
 
-            if today == 'Thursday':
+            if today == 'Thursday' or today == 'Friday':
                 time_slots = ['10-10:30am', '10:30-11am', '11-11:30am']
             else:
                 time_slots = ['7-7:30pm', '7:30-8pm', '8-8:30pm']
