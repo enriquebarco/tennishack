@@ -52,10 +52,12 @@ class PaddleCourtBooking:
     def book_paddle_court(self):
         try:
             today = datetime.datetime.now().strftime("%A")
-            # if today != 'Monday':
-            tennis = self.wait.until(EC.element_to_be_clickable((By.XPATH, f"//button[contains(text(), 'Tennis')]")))
-            self.driver.execute_script("arguments[0].click();", tennis)
-            print('Selected Tennis')
+            if today != 'Monday':
+                tennis = self.wait.until(EC.element_to_be_clickable((By.XPATH, f"//button[contains(text(), 'Tennis')]")))
+                self.driver.execute_script("arguments[0].click();", tennis)
+                print('Selected Tennis')
+            else:
+                print('Selected Padel')
 
             if today == 'Thursday' or today == 'Friday':
                 time_slots = ['10-10:30am', '10:30-11am', '11-11:30am']
