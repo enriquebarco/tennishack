@@ -43,7 +43,7 @@ class PaddleCourtBooking:
             self.driver.get(self.booking_url)
             print('Successfully navigated to booking page')
 
-            two_days_advance_div = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'body > div.body_wrapper > div.pusher > div.yield_container.pb30 > div > div:nth-child(2) > div > div.ui.attached.segment > div > div:nth-child(1) > div.content.active > table > tbody > tr > td:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div > div > div > button:nth-child(3)')))
+            two_days_advance_div = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.range-container .day-container:nth-child(3) button')))
             self.driver.execute_script("arguments[0].click();", two_days_advance_div)
             print('Navigated to correct date')
 
