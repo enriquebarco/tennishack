@@ -84,10 +84,10 @@ class PaddleCourtBooking:
                             print(error_message)
                             raise Exception(error_message) from e
             
-            if today == 'Thursday' or today == 'Friday':
-                court_4 = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Tennis 4')]")))
-                self.driver.execute_script("arguments[0].click();", court_4)
-                print('Selected court 4')
+            # if today == 'Thursday' or today == 'Friday':
+            #     court_4 = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Tennis 4')]")))
+            #     self.driver.execute_script("arguments[0].click();", court_4)
+            #     print('Selected court 4')
 
             # click next
             next_button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "body > div.body_wrapper > div.pusher > div.yield_container.pb30 > div > div:nth-child(2) > div > div.ui.attached.segment > div > div:nth-child(1) > div.content.active > table > tbody > tr > td:nth-child(2) > div.position_sticky_bottom_on_mobile.bk_white.mtb20.ptb10.z-index-1 > div.ui.buttons.fluid > button")))
