@@ -5,6 +5,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import StaleElementReferenceException
 from utils import handle_screenshot
 from dotenv import load_dotenv
+import traceback
+
 
 # load environmental variables
 load_dotenv()
@@ -48,7 +50,7 @@ class PaddleCourtBooking:
         except Exception as e:
             print(f'Error moving to booking URL: {e}')
             handle_screenshot(self.driver)
-    
+
     def book_paddle_court(self):
         try:
             today = datetime.datetime.now().strftime("%A")
@@ -65,32 +67,38 @@ class PaddleCourtBooking:
                 time_slots = ['10-10:30am', '10:30-11am', '11-11:30am']
             else:
                 time_slots = ['7-7:30pm', '7:30-8pm', '8-8:30pm']
+            
             for slot in time_slots:
                 retry = 0
                 while retry < 3:
                     try:
                         slot_element = self.wait.until(EC.element_to_be_clickable((By.XPATH, f"//button[contains(text(), '{slot}')]")))
                         self.driver.execute_script("arguments[0].click();", slot_element)
-                        print(f'selected time slot {slot}')
+                        print(f'Selected time slot {slot}')
                         break
-                    except StaleElementReferenceException:
+                    except StaleElementReferenceException as e:
                         retry += 1
+                        print(f'Retry {retry} for time slot {slot} due to StaleElementReferenceException.')
                         if retry >= 3:
-                            print(f"Failed to select time slot {slot} after retries.")
-                            raise
+                            error_message = f"Failed to select time slot {slot} after {retry} retries."
+                            print(error_message)
+                            raise Exception(error_message) from e
+            
             if today == 'Thursday' or today == 'Friday':
                 court_4 = self.wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Tennis 4')]")))
                 self.driver.execute_script("arguments[0].click();", court_4)
-                print('selected court 4')
+                print('Selected court 4')
 
             # click next
             next_button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "body > div.body_wrapper > div.pusher > div.yield_container.pb30 > div > div:nth-child(2) > div > div.ui.attached.segment > div > div:nth-child(1) > div.content.active > table > tbody > tr > td:nth-child(2) > div.position_sticky_bottom_on_mobile.bk_white.mtb20.ptb10.z-index-1 > div.ui.buttons.fluid > button")))
             self.driver.execute_script("arguments[0].click();", next_button)
-            print('clicked next')
+            print('Clicked next')
 
         except Exception as e:
-            print(f'Error selecting slots: {e}')
+            error_message = f'Error selecting and booking slots: {str(e)}\nStacktrace:\n{traceback.format_exc()}'
+            print(error_message)
             handle_screenshot(self.driver)
+
 
     def confirm_booking(self):
             try:
