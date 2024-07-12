@@ -48,7 +48,7 @@ class PaddleCourtBooking:
             print('Navigated to correct date')
 
         except Exception as e:
-            print(f'Error moving to booking URL: {e}')
+            print(f'Error moving to booking URL: {str(e)}\nStacktrace:\n{traceback.format_exc()}')
             handle_screenshot(self.driver)
 
     def book_paddle_court(self):
